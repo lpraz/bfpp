@@ -11,28 +11,51 @@
 #include <stdlib.h>
 
 int main(int argc, char **argv) {
-    /* Declarations */
+    /* Declarations - file I/O */
     FILE *in, *out;
     char *inpath, *outpath;
-    char curchar;
+    int inchar;
+    
+    /* Declarations - parsing macros */
+    char *mult_str = malloc(256 * sizeof(char));
+    int mult_strlen = 0;
+    char cmd;
+    int mult;
     
     /* Read arguments, quit if necessary */
     if (args(argc, argv, inpath, outpath))
         return EXIT_SUCCESS;
     
     /* Open files */
-    in = fopen(inpath, "r");
-    out = fopen(inpath, "w");
+    in = fopen("test/bf/in.bfpp", "r");
+    out = fopen("test/bf/out.bf", "w");
     
     if (in == NULL || out == NULL) {
-        printf("Error opening files");
+        printf("Error opening files\n");
         return EXIT_FAILURE;
     }
     
     /* Read in into out */
-    /* TODO: process */
-    while (curchar = fgetc(in), curchar != EOF)
-        fputc(curchar, out);
+    inchar = fgetc(in);
+    while (inchar != EOF) {
+        if (inchar == '(') {
+            cmd = fgetc(in);    /* Command */
+            fgetc(in);          /* Comma */
+            
+            inchar = fgetc(in); /* Multiplier */
+            while (inchar != ')') {
+                mult_str[mult_strlen] = inchar;
+                mult_strlen++;
+                inchar = fgetc(in);
+            }
+            
+            mult_str[mult_strlen] == '\0';
+            mult = atoi(mult_str);
+        } else {
+            fputc(inchar, out);
+        }
+        inchar = fgetc(in);
+    }
     
     /* Close files */
     fclose(in);
