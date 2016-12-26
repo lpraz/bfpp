@@ -3,13 +3,19 @@ Makes writing Brainfuck easier by translating its own custom
 Brainfuck-based syntax to pure Brainfuck.
 
 ## Example Syntax
+bfpp is based on the contraction of Brainfuck into macros and functions.
+
+### Macros
 Repeated Brainfuck commands such as these:
 
     ++++++++
 
-can be re-written as these, which bfpp will translate back to the former:
+can be re-written as macros, which bfpp will translate back to the former:
 
-    (+/8)
+    (+,8)
+
+### Functions (TODO)
+Will be implemented at a later date.
 
 ## Building and (Un)Installing
  * Building: On Linux systems, just `git clone` this repository, then

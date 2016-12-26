@@ -17,8 +17,8 @@ int main(int argc, char **argv) {
     int inchar;
     
     /* Declarations - parsing macros */
-    char *mult_str = malloc(256 * sizeof(char));
-    int mult_strlen = 0;
+    char *mult_str;
+    int mult_strlen;
     char cmd;
     int mult;
     
@@ -39,10 +39,13 @@ int main(int argc, char **argv) {
     inchar = fgetc(in);
     while (inchar != EOF) {
         if (inchar == '(') {
-            cmd = fgetc(in);    /* Command */
-            fgetc(in);          /* Comma */
+            cmd = fgetc(in);        /* Command */
+            fseek(in, 1, SEEK_CUR); /* Comma */
             
-            inchar = fgetc(in); /* Multiplier */
+            mult_strlen = 0;        /* Multiplier */
+            mult_str = malloc(256 * sizeof(char));
+            inchar = fgetc(in);
+            
             while (inchar != ')') {
                 mult_str[mult_strlen] = inchar;
                 mult_strlen++;
@@ -51,6 +54,10 @@ int main(int argc, char **argv) {
             
             mult_str[mult_strlen] == '\0';
             mult = atoi(mult_str);
+            
+            for (int i = 0; i < mult; i++)
+                fputc(cmd, out);
+            
         } else {
             fputc(inchar, out);
         }
