@@ -15,7 +15,18 @@ can be re-written as macros, which bfpp will translate back to the former:
     (+,8)
 
 ### Functions (TODO)
-Will be implemented at a later date.
+More complex statements can be defined as functions and re-used at any
+point after their definition:
+
+    {def shift_one_right}{[>+<-]>}
+    {shift_one_right}{shift_one_right}
+
+### Comments (TODO)
+Comments that could ordinarily not be written in Brainfuck due to
+containing command characters can be written with surrounding tildes.
+
+    ~TODO: Something useful.~
+    ++++++++    ~Add 8 to current cell.~
 
 ## Building and (Un)Installing
  * Building: On Linux systems, just `git clone` this repository, then

@@ -5,6 +5,7 @@
 
 /* Local includes */
 #include "args.h"
+#include "parse.h"
 
 /* Stdlib includes */
 #include <stdio.h>
@@ -15,12 +16,6 @@ int main(int argc, char **argv) {
     FILE *in, *out;
     char *inpath, *outpath;
     int inchar;
-    
-    /* Declarations - parsing macros */
-    char *mult_str;
-    int mult_strlen;
-    char cmd;
-    int mult;
     
     /* Read arguments, quit if necessary */
     if (args(argc, argv, inpath, outpath))
@@ -38,29 +33,13 @@ int main(int argc, char **argv) {
     /* Read in into out */
     inchar = fgetc(in);
     while (inchar != EOF) {
-        if (inchar == '(') {
-            cmd = fgetc(in);        /* Command */
-            fseek(in, 1, SEEK_CUR); /* Comma */
-            
-            mult_strlen = 0;        /* Multiplier */
-            mult_str = malloc(256 * sizeof(char));
-            inchar = fgetc(in);
-            
-            while (inchar != ')') {
-                mult_str[mult_strlen] = inchar;
-                mult_strlen++;
-                inchar = fgetc(in);
-            }
-            
-            mult_str[mult_strlen] == '\0';
-            mult = atoi(mult_str);
-            
-            for (int i = 0; i < mult; i++)
-                fputc(cmd, out);
-            
-        } else {
+        if (inchar == MACRO_OPEN_CHAR)
+            parse_macro(in, out);
+        else if (inchar == COMMENT_OPEN_CHAR)
+            parse_comment(in);
+        else
             fputc(inchar, out);
-        }
+        
         inchar = fgetc(in);
     }
     
