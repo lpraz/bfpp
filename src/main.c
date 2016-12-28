@@ -35,6 +35,8 @@ int main(int argc, char **argv) {
     while (inchar != EOF) {
         if (inchar == MACRO_OPEN_CHAR)
             parse_macro(in, out);
+        else if (inchar == FUNC_OPEN_CHAR)
+            parse_func(in, out);
         else if (inchar == COMMENT_OPEN_CHAR)
             parse_comment(in);
         else
