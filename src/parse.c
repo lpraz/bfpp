@@ -44,7 +44,7 @@ void parse_macro(FILE *in, FILE *out) {
 
 /* Transpiles a function to its Brainfuck equivalent. */
 /* TODO: implement this */
-void parse_func(FILE *in, FILE *out) {
+void parse_func(FILE *in, FILE *out, Vector *funcs) {
     char *func_name = malloc(256 * sizeof(char));
     int func_name_len;
     int func_char;

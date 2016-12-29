@@ -16,9 +16,4 @@ typedef struct Function {
 /* Initializes a function. */
 Function func_init(char *name, char *code);
 
-/* Searches for a function with the specified name in an array of
- * functions and returns its code, if it exists.
- */
-char *func_find(char *name);
-
 #endif
