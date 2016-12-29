@@ -6,9 +6,13 @@
 /* Include self */
 #include "parse.h"
 
+/* Local includes */
+#include "vector.h"
+
 /* Stdlib includes */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* Transpiles a macro to its Brainfuck equivalent. */
 void parse_macro(FILE *in, FILE *out) {
@@ -45,30 +49,68 @@ void parse_macro(FILE *in, FILE *out) {
 /* Transpiles a function to its Brainfuck equivalent. */
 /* TODO: implement this */
 void parse_func(FILE *in, FILE *out, Vector *funcs) {
+    /* Declarations - func name */
     char *func_name = malloc(256 * sizeof(char));
     int func_name_len;
-    int func_char;
     
-    func_char = fgetc(in);
+    /* Declarations - func code */
+    char *func_code;
+    int func_code_len;
     
-    while (func_char != ' ' && func_char != FUNC_CLOSE_CHAR) {
-        func_name[func_name_len++] = func_char;
-        func_char = fgetc(in);
+    /* Declarations - other */
+    Function new_func;
+    int temp_char = fgetc(in);
+    
+    /* Read in a string */
+    while (temp_char != ' ' && temp_char != FUNC_CLOSE_CHAR) {
+        func_name[func_name_len++] = temp_char;
+        temp_char = fgetc(in);
     }
     
-    if (strcmp(func_char, "def") == 0) {
-        func_char = fgetc(in);
+    func_name[func_name_len] = '\0';
+    
+    /* Is this a definition? */
+    if (strcmp(func_name, "def") == 0) {
+        char *func_name = malloc(65536 * sizeof(char));
+        temp_char = fgetc(in);
         func_name_len = 0;
         
-        while (func_char != FUNC_CLOSE_cHAR) {
-            func_name[func_name_len++] = func_char;
-            func_char = fgetc(in);
+        /* Func name */
+        while (temp_char != FUNC_CLOSE_CHAR) {
+            func_name[func_name_len++] = temp_char;
+            temp_char = fgetc(in);
         }
-    } else {
         
+        /* Is this the right opening char? */
+        temp_char = fgetc(in);
+        if (temp_char != FUNC_OPEN_CHAR) {
+            printf("Function %s has malformed definition!", func_name);
+            return;
+        }
+        
+        /* Func code */
+        temp_char = fgetc(in);
+        while (temp_char != FUNC_CLOSE_CHAR) {
+            func_code[func_code_len++] = temp_char;
+            temp_char = fgetc(in);
+        } 
+        
+        /* Finish up, copy to list of funcs */
+        func_code[func_code_len] = '\0';
+        new_func = func_init(func_name, func_code);
+        vector_add(funcs, new_func);
+    } else {
+        /* Search for a function with the name */
+        func_code = vector_find(funcs, func_name);
+        if (func_code == NULL)
+            printf("Function %s undefined!", func_name);
+        else
+            fputs(func_code, out);
     }
     
+    /* Free everything */
     free(func_name);
+    free(func_code);
 }
 
 /* Transpiles a comment to its Brainfuck equivalent (removes it). */

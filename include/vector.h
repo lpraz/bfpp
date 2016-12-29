@@ -12,7 +12,7 @@
 
 /* Structure */
 typedef struct Vector {
-    Function *arr
+    Function *arr;
     int size;
     int cap;
 } Vector;

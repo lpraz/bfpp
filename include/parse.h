@@ -6,6 +6,9 @@
 #ifndef PARSE_H
 #define PARSE_H
 
+/* Local includes */
+#include "vector.h"
+
 /* Stdlib includes */
 #include <stdio.h>
 
@@ -21,7 +24,7 @@
 void parse_macro(FILE *in, FILE *out);
 
 /* Transpiles a function to its Brainfuck equivalent. */
-void parse_func(FILE *in, FILE *out);
+void parse_func(FILE *in, FILE *out, Vector *funcs);
 
 /* Transpiles a comment to its Brainfuck equivalent (removes it). */
 void parse_comment(FILE *in);
