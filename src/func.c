@@ -6,6 +6,7 @@
 /* Include self */
 #include "func.h"
 
+#include <stdio.h>
 /* Initializes a function. */
 Function func_init(char *name, char *code) {
     Function func = {name, code};

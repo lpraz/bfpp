@@ -4,7 +4,7 @@
 
 # Compiler options
 CC = gcc
-CFLAGS = -std=c99
+CFLAGS = -std=c99 -g
 
 # Directories (build)
 SRCDIR = src

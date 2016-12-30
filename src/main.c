@@ -6,6 +6,7 @@
 /* Local includes */
 #include "args.h"
 #include "parse.h"
+#include "vector.h"
 
 /* Stdlib includes */
 #include <stdio.h>
@@ -16,6 +17,9 @@ int main(int argc, char **argv) {
     FILE *in, *out;
     char *inpath, *outpath;
     int inchar;
+    
+    /* Declaraitons - funcs */
+    Vector funcs = vector_init(VECTOR_DEFAULT_SIZE);
     
     /* Read arguments, quit if necessary */
     if (args(argc, argv, inpath, outpath))
@@ -33,10 +37,11 @@ int main(int argc, char **argv) {
     /* Read in into out */
     inchar = fgetc(in);
     while (inchar != EOF) {
+        printf("Char, lel\n");
         if (inchar == MACRO_OPEN_CHAR)
             parse_macro(in, out);
         else if (inchar == FUNC_OPEN_CHAR)
-            parse_func(in, out);
+            parse_func(in, out, &funcs);
         else if (inchar == COMMENT_OPEN_CHAR)
             parse_comment(in);
         else

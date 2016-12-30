@@ -16,7 +16,8 @@
 /* Initializes a vector. */
 Vector vector_init(int cap) {
     Function *arr = malloc(cap * sizeof(Function));
-    Vector vec= {arr, 0, cap};
+    Vector vec = {arr, 0, cap};
+    return vec;
 }
 
 /* Puts a function at the end of a vector. */
