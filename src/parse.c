@@ -14,14 +14,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* Transpiles a macro to its Brainfuck equivalent. */
+/* Transpiles a macro to its Brainfuck equivalent, writes to file. */
 void parse_macro(FILE *in, FILE *out) {
     /* Declarations */
     char *mult_str = malloc(256 * sizeof(char));
     int mult_str_len = 0;
     char cmd;
     int mult;
-    int mult_char;
+    int temp_char;
     
     /* Input: command */
     cmd = fgetc(in);
@@ -30,12 +30,13 @@ void parse_macro(FILE *in, FILE *out) {
     fseek(in, 1, SEEK_CUR);
     
     /* Input: multiplier */
-    mult_char = fgetc(in);
-    while (mult_char != MACRO_CLOSE_CHAR) {
-        mult_str[mult_str_len++] = mult_char;
-        mult_char = fgetc(in);
+    temp_char = fgetc(in);
+    while (temp_char != MACRO_CLOSE_CHAR) {
+        mult_str[mult_str_len++] = temp_char;
+        temp_char = fgetc(in);
     }
     
+    /* End string, convert to int */
     mult_str[mult_str_len] == '\0';
     mult = atoi(mult_str);
     
@@ -46,8 +47,42 @@ void parse_macro(FILE *in, FILE *out) {
     free(mult_str);
 }
 
+/* Transpiles a macro to its Brainfuck equivalent, writes to str and
+ * keeps track of its length.
+ */
+void parse_macro_str(FILE *in, char *out_str, int *out_str_len) {
+    /* Declarations */
+    char *mult_str = malloc(256 * sizeof(char));
+    int mult_str_len = 0;
+    char cmd;
+    int mult;
+    int temp_char;
+    
+    /* Input: command */
+    cmd = fgetc(in);
+    
+    /* Input: separator */
+    fseek(in, 1, SEEK_CUR);
+    
+    /* Input: multiplier */
+    temp_char = fgetc(in);
+    while (temp_char != MACRO_CLOSE_CHAR) {
+        mult_str[mult_str_len++] = temp_char;
+        temp_char = fgetc(in);
+    }
+    
+    /* End string, convert to int */
+    mult_str[mult_str_len] == '\0';
+    mult = atoi(mult_str);
+    
+    /* Output */
+    for (int i = 0; i < mult; i++)
+        out_str[(*out_str_len)++] = cmd;
+    
+    free(mult_str);
+}
+
 /* Transpiles a function to its Brainfuck equivalent. */
-/* TODO: implement this */
 void parse_func(FILE *in, FILE *out, Vector *funcs) {
     /* Declarations - func name */
     char *func_name = malloc(256 * sizeof(char));
@@ -95,7 +130,13 @@ void parse_func(FILE *in, FILE *out, Vector *funcs) {
         func_code = malloc(65536 * sizeof(char));
         temp_char = fgetc(in);
         while (temp_char != FUNC_CLOSE_CHAR) {
-            func_code[func_code_len++] = temp_char;
+            if (temp_char == MACRO_OPEN_CHAR) {
+                parse_macro_str(in, func_code, &func_code_len);
+            } else if (temp_char == COMMENT_OPEN_CHAR) {
+                parse_comment(in);
+            } else {
+                func_code[func_code_len++] = temp_char;
+            }
             temp_char = fgetc(in);
         } 
         
@@ -114,15 +155,11 @@ void parse_func(FILE *in, FILE *out, Vector *funcs) {
             fputs(func_code, out);
     }
     
-    /* Free everything */
-    //free(func_name);
-    //free(func_code);
+    /* Don't free at the end, pointers are used in func list */
 }
 
-/* Transpiles a comment to its Brainfuck equivalent (removes it). */
+/* Transpiles a comment to its Brainfuck equivalent (discards it). */
 void parse_comment(FILE *in) {
-    int inchar = fgetc(in);
-    
-    while (inchar != COMMENT_CLOSE_CHAR)
-        inchar = fgetc(in);
+    fgetc(in);
+    while (fgetc(in) != COMMENT_CLOSE_CHAR);
 }

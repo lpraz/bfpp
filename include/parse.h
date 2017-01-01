@@ -20,13 +20,20 @@
 #define COMMENT_OPEN_CHAR '~'
 #define COMMENT_CLOSE_CHAR '~'
 
-/* Transpiles a macro to its Brainfuck equivalent. */
+/* Transpiles a macro to its Brainfuck equivalent. Returns the resulting
+ * length.
+ */
 void parse_macro(FILE *in, FILE *out);
+
+/* Transpiles a macro to its Brainfuck equivalent, writes to str and
+ * keeps track of its length.
+ */
+void parse_macro_str(FILE *in, char *out_str, int *out_str_len);
 
 /* Transpiles a function to its Brainfuck equivalent. */
 void parse_func(FILE *in, FILE *out, Vector *funcs);
 
-/* Transpiles a comment to its Brainfuck equivalent (removes it). */
+/* Transpiles a comment to its Brainfuck equivalent (discards it). */
 void parse_comment(FILE *in);
 
 #endif

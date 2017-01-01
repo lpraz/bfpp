@@ -37,7 +37,6 @@ int main(int argc, char **argv) {
     /* Read in into out */
     inchar = fgetc(in);
     while (inchar != EOF) {
-        printf("Char, lel\n");
         if (inchar == MACRO_OPEN_CHAR)
             parse_macro(in, out);
         else if (inchar == FUNC_OPEN_CHAR)
