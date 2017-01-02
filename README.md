@@ -21,6 +21,8 @@ point after their definition:
     {def shift_one_right}{[>+<-]>}
     {shift_one_right}{shift_one_right}
 
+Function definitions cannot be nested within other function definitions.
+
 ### Comments (TODO)
 Comments that could ordinarily not be written in Brainfuck due to
 containing command characters can be written with surrounding tildes.

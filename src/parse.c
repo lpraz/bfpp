@@ -155,7 +155,9 @@ void parse_func(FILE *in, FILE *out, Vector *funcs) {
             fputs(func_code, out);
     }
     
-    /* Don't free at the end, pointers are used in func list */
+    /* Don't free at the end, pointers are used in func list and will
+     * be freed in main once finished
+     */
 }
 
 /* Transpiles a comment to its Brainfuck equivalent (discards it). */

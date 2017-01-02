@@ -21,14 +21,12 @@ bool args(int argc, char **argv, char *in, char *out) {
         } else if (strcmp(argv[i], "--help") == 0) {
             printf("Usage: bfpp [INFILE] [OUTFILE]\n");
             return true;
+        } else if (in == NULL) {
+            strcpy(argv[i], in);
+        } else if (out == NULL) {
+            strcpy(argv[i], out);
         }
     }
-    
-    in = malloc(strlen(argv[1]) * sizeof(char));
-    strcpy(argv[1], in);
-    
-    out = malloc(strlen(argv[2]) * sizeof(char));
-    strcpy(argv[2], out);
     
     return false;
 }
